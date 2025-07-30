@@ -101,7 +101,7 @@ async def subscribe_current_user(channels, user_id, notify=None):
                     # Подписываемся только если пользователь ещё не подписан
                     if getattr(entity, "left", False):
                         await client(JoinChannelRequest(InputChannel(entity.id, entity.access_hash)))
-                        await asyncio.sleep(1)
+                        await asyncio.sleep(2)
 
             except FloodWaitError as e:
                 logger.warning(f"FloodWait: {e.seconds}s on {ch}")
