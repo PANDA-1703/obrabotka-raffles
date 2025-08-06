@@ -54,8 +54,11 @@ async def start_collect_command(msg: types.Message):
 
 
 def normalize_link(link: str) -> str:
-    if link.startswith("https://t.me/"):
-        return "@" + link.split("/")[-1].lstrip('+')
+    # Не трогаем ссылку-приглашение
+    if "t.me/+" in link or "joinchat/" in link:
+        return link
+    if link.startswith("https://t.me/") or link.startswith("http://t.me/"):
+        return "@" + link.split("/")[-1]
     return link
 
 

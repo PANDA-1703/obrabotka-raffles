@@ -25,34 +25,32 @@ async def resolve_channel(client, link: str):
     if not link:
         return None
 
-    # Нормализуем ссылку
-    if link.startswith("http"):
-        match = re.search(r"t\.me/([\w\d_@+-]+)", link)
-        if not match:
-            logger.warning(f"[resolve_channel] Невалидная ссылка: {link}")
-            return None
-        link = match.group(1)
+    # Нормализация: вытащим из ссылки username или invite
+    match = re.search(r"(?:https?://)?t\.me/(joinchat/|\+)?([A-Za-z0-9_+-]+)", link)
+    if match:
+        prefix, value = match.groups()
+        if prefix == "+" or prefix == "joinchat/":
+            link = f"+{value}"
+        else:
+            link = value
 
-    # Удалим лишний '@'
-    if link.startswith("@"):
-        link = link[1:]
+    # Удалим лишний @
+    link = link.lstrip("@")
 
-    # Пропускаем странные короткие строки (часто это мусор)
+    # Пропускаем странные короткие строки
     if len(link) < 5:
         logger.warning(f"[resolve_channel] Слишком короткая ссылка: {link}")
         return None
 
-    # Проверка кеша
+    # Кеш
     if link in entity_cache:
         return entity_cache[link]
 
     try:
         if link.startswith("+"):
-            # Ссылка-приглашение
             updates = await client(ImportChatInviteRequest(link[1:]))
             entity = updates.chats[0] if updates.chats else None
         else:
-            # Username
             entity = await client.get_entity(link)
 
         entity_cache[link] = entity
