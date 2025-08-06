@@ -121,7 +121,7 @@ async def on_finish(callback: CallbackQuery):
         user_id,
         lambda text: safe_send_message(callback.message, text)
     )
-    user_success_map[user_id] = result["successful"]
+    user_success_map[user_id] = set(result["successful"])
 
     all_channels = result['successful']
     chunk_size = 50
@@ -183,6 +183,10 @@ async def pollinations_worker():
 
                 # Обновление карты найденных каналов
                 existing = user_success_map.setdefault(message.from_user.id, set())
+                if not isinstance(existing, set):
+                    existing = set(existing)
+                    user_success_map[message.from_user.id] = existing
+
                 existing.update(chs)
 
                 await safe_send_message(
