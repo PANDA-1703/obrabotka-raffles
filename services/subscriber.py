@@ -20,7 +20,7 @@ from telethon.tl.functions.messages import ImportChatInviteRequest
 entity_cache = {}
 
 
-async def resolve_channel(client, link: str):
+async def resolve_channel(client, link: str, notyfy=None):
     link = link.strip()
     if not link:
         return None
@@ -58,6 +58,9 @@ async def resolve_channel(client, link: str):
 
     except FloodWaitError as e:
         logger.warning(f"[resolve_channel] FloodWait {e.seconds} сек для {link}")
+        if notify:
+            await notify(f"⏳ FloodWait {e.seconds} сек для {link}")
+
         await asyncio.sleep(e.seconds + 3)
         return await resolve_channel(client, link)
 
@@ -87,7 +90,7 @@ async def subscribe_current_user(channels, user_id, notify=None):
 
         for ch in channels:
             try:
-                entity = await resolve_channel(client, ch)
+                entity = await resolve_channel(client, ch, notyfy=notify)
                 if not entity:
                     failed.append(ch)
                     continue
