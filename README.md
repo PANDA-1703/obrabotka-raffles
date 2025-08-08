@@ -41,7 +41,7 @@ obrabotka-raffles/
 1. Клонирование репозитория
 
 ```shell
-git clone https://github.com/yourusername/obrabotka-raffles.git
+git clone https://github.com/PANDA-1703/obrabotka-raffles.git
 cd obrabotka-raffles
 ```
 

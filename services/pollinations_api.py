@@ -34,9 +34,8 @@ PROMPT_TEMPLATE = """
 
 PROXIES = [
     None,
-    "http://panda:8F9f2f2f@185.255.179.191:56265",
-    "http://J3voRx:wH5YNh@147.45.54.60:9457",
-    "http://3KzVwz:7KT0YU@147.45.53.23:9547"
+    "YOUR_PROXY_1",
+    "YOUR_PROXY_2"
 ]
 
 
